@@ -1,5 +1,5 @@
 {
-  "name": "agdata",
+  "name": "agronomy-mcp",
   "main": "src/index.ts",
   "compatibility_date": "2025-03-10",
   "compatibility_flags": ["nodejs_compat"],
@@ -7,7 +7,7 @@
   "kv_namespaces": [
     {
       "binding": "CACHE",
-      "id": "b44cb5e9031b448abed42c09376b29b6"
+      "id": "your-kv-namespace-id"
     }
   ],
 

@@ -4,6 +4,36 @@ An agronomy-focused [Model Context Protocol](https://modelcontextprotocol.io/) (
 
 Replaces the manual workflow of pulling temperature data from various sources and running GDU calculations in spreadsheets one county at a time.
 
+## Quick Deploy with Claude
+
+Copy and paste this prompt to have Claude deploy this MCP server to your Cloudflare account:
+
+> Clone the repo at `https://github.com/CoreyFransen08/agronomy-mcp` and deploy the Agronomy MCP server to my Cloudflare account. Follow the setup instructions in the README — install dependencies, create a KV namespace, update the namespace ID in wrangler.jsonc, and run `npm run deploy`. Verify the deployment by hitting the /health endpoint.
+
+## Cloudflare Account Setup
+
+If you don't already have a Cloudflare account and CLI configured:
+
+1. **Create a Cloudflare account** at [dash.cloudflare.com/sign-up](https://dash.cloudflare.com/sign-up) (free tier works)
+
+2. **Install Wrangler** (the Cloudflare CLI):
+   ```bash
+   npm install -g wrangler
+   ```
+
+3. **Authenticate**:
+   ```bash
+   wrangler login
+   ```
+   This opens a browser window to authorize the CLI with your Cloudflare account.
+
+4. **Verify** your login:
+   ```bash
+   wrangler whoami
+   ```
+
+Once authenticated, follow the [Setup](#setup) section below to install, configure, and deploy.
+
 ## Tools
 
 ### Weather
