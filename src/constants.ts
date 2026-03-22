@@ -19,4 +19,10 @@ export const CACHE_TTL: Record<string, number> = {
 /** TTL for individual year normals data cached in KV */
 export const NORMALS_YEAR_CACHE_TTL = 2_592_000; // 30 days
 
+export const CLOUDFLARE_CRAWL_BASE =
+  "https://api.cloudflare.com/client/v4/accounts";
+
+/** Cache TTL for completed crawl results */
+export const CRAWL_RESULT_CACHE_TTL = 86_400; // 24h
+
 export const MAX_RESPONSE_CHARS = 500_000;

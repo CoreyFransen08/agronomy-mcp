@@ -3,6 +3,7 @@ import { McpAgent } from "agents/mcp";
 import type { Env } from "./types";
 import { registerWeatherTools } from "./tools/weather";
 import { registerGduTools } from "./tools/gdu";
+import { registerCrawlTools } from "./tools/crawl";
 
 export class AgronomyMCP extends McpAgent<Env, {}, {}> {
   server = new McpServer({
@@ -13,6 +14,7 @@ export class AgronomyMCP extends McpAgent<Env, {}, {}> {
   async init() {
     registerWeatherTools(this.server, this.env);
     registerGduTools(this.server, this.env);
+    registerCrawlTools(this.server, this.env);
   }
 }
 
