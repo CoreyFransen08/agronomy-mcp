@@ -77,3 +77,24 @@ export async function getCrawlResults(
 
   return res.json();
 }
+
+export async function deleteCrawl(
+  creds: CrawlCredentials,
+  jobId: string
+): Promise<unknown> {
+  const res = await fetch(`${crawlUrl(creds.accountId)}/${jobId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${creds.apiToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(
+      `Cloudflare crawl delete API error (${res.status}): ${body}`
+    );
+  }
+
+  return res.json();
+}

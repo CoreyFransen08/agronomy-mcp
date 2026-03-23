@@ -43,6 +43,10 @@ export const startCrawlSchema = z.object({
     ),
 });
 
+export const deleteCrawlSchema = z.object({
+  jobId: z.string().describe("The crawl job ID to cancel."),
+});
+
 export const getCrawlResultsSchema = z.object({
   jobId: z.string().describe("The crawl job ID returned by start_crawl."),
   limit: z
@@ -59,7 +63,7 @@ export const getCrawlResultsSchema = z.object({
       "Pagination cursor from a previous response. Pass to retrieve the next page of results."
     ),
   status: z
-    .enum(["completed", "failed", "disallowed"])
+    .enum(["queued", "completed", "disallowed", "skipped", "errored", "cancelled"])
     .optional()
     .describe("Filter results by record status."),
 });

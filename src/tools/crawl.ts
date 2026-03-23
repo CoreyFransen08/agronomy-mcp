@@ -4,8 +4,9 @@ import { MAX_RESPONSE_CHARS } from "../constants";
 import {
   startCrawl as startCrawlApi,
   getCrawlResults as getCrawlResultsApi,
+  deleteCrawl as deleteCrawlApi,
 } from "../services/cloudflare-crawl";
-import { startCrawlSchema, getCrawlResultsSchema } from "../schemas/crawl";
+import { startCrawlSchema, deleteCrawlSchema, getCrawlResultsSchema } from "../schemas/crawl";
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -40,6 +41,37 @@ export function registerCrawlTools(server: McpServer, env: Env) {
             apiToken: env.CLOUDFLARE_API_TOKEN,
           },
           params
+        );
+        return {
+          content: [{ type: "text" as const, text: truncate(data) }],
+        };
+      } catch (error) {
+        return {
+          content: [
+            { type: "text" as const, text: `Error: ${errorMessage(error)}` },
+          ],
+        };
+      }
+    }
+  );
+
+  // ── delete_crawl ───────────────────────────────────────────────────
+  server.registerTool(
+    "delete_crawl",
+    {
+      description:
+        "Cancel a running crawl job. Use this to stop a crawl that is no longer needed.",
+      inputSchema: deleteCrawlSchema.shape,
+    },
+    async (input) => {
+      const { jobId } = deleteCrawlSchema.parse(input);
+      try {
+        const data = await deleteCrawlApi(
+          {
+            accountId: env.CLOUDFLARE_ACCOUNT_ID,
+            apiToken: env.CLOUDFLARE_API_TOKEN,
+          },
+          jobId
         );
         return {
           content: [{ type: "text" as const, text: truncate(data) }],
