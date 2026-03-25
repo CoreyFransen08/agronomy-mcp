@@ -25,4 +25,12 @@ export default new OAuthProvider({
   clientRegistrationEndpoint: "/register",
   defaultHandler: FleetioHandler as any,
   tokenEndpoint: "/token",
+  scopesSupported: ["mcp:access"],
+  // RFC 9728 — tells MCP clients where to find our authorization server
+  resourceMetadata: {
+    resource: "https://fleetio-mcp.<your-subdomain>.workers.dev/mcp",
+    resource_name: "Fleetio MCP Server",
+    scopes_supported: ["mcp:access"],
+    bearer_methods_supported: ["header"],
+  },
 });
