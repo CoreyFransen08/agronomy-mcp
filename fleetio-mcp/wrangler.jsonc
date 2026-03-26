@@ -7,14 +7,11 @@
 
   /**
    * Secrets (set via `npx wrangler secret put <NAME>`):
-   *   COOKIE_ENCRYPTION_KEY  — random string for encrypting session cookies
+   *   FLEETIO_API_KEY        — your Fleetio API key
+   *   FLEETIO_ACCOUNT_TOKEN  — your Fleetio account token
    */
 
   "kv_namespaces": [
-    {
-      "binding": "OAUTH_KV",
-      "id": "<your-oauth-kv-namespace-id>"
-    },
     {
       "binding": "CACHE",
       "id": "<your-cache-kv-namespace-id>"
@@ -39,9 +36,5 @@
 
   "observability": {
     "enabled": true
-  },
-
-  "dev": {
-    "port": 8788
   }
 }

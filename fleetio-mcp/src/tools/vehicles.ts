@@ -1,6 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { Env, FleetioProps } from "../types";
-import type { FleetioCredentials } from "../services/fleetio-api";
+import type { Env } from "../types";
 import { fleetioList, fleetioRequest } from "../services/fleetio-api";
 import { cachedFetchAndTransform } from "../services/cache";
 import { MAX_RESPONSE_CHARS } from "../constants";
@@ -24,24 +23,16 @@ function buildFilters(input: Record<string, unknown>): Record<string, Record<str
   for (const [key, val] of Object.entries(input)) {
     if (key.startsWith("filter_") && val !== undefined) {
       const field = key.replace("filter_", "");
-      if (typeof val === "boolean") {
-        filters[field] = { eq: String(val) };
-      } else {
-        filters[field] = { eq: String(val) };
-      }
+      filters[field] = { eq: String(val) };
     }
   }
   return Object.keys(filters).length > 0 ? filters : undefined;
 }
 
-export function registerVehicleTools(
-  server: McpServer,
-  env: Env,
-  props: FleetioProps
-) {
-  const creds: FleetioCredentials = {
-    apiKey: props.apiKey,
-    accountToken: props.accountToken,
+export function registerVehicleTools(server: McpServer, env: Env) {
+  const creds = {
+    apiKey: env.FLEETIO_API_KEY,
+    accountToken: env.FLEETIO_ACCOUNT_TOKEN,
   };
 
   server.tool(
@@ -55,7 +46,7 @@ export function registerVehicleTools(
           {
             kv: env.CACHE,
             toolName: "list_vehicles",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -89,7 +80,7 @@ export function registerVehicleTools(
           {
             kv: env.CACHE,
             toolName: "get_vehicle",
-            params: { id: parsed.id, account: props.accountToken },
+            params: { id: parsed.id },
             forceRefresh: false,
           },
           () => fleetioRequest(creds, `/v1/vehicles/${parsed.id}`)
@@ -114,7 +105,7 @@ export function registerVehicleTools(
           {
             kv: env.CACHE,
             toolName: "list_vehicle_meter_entries",
-            params: { vehicle_id: parsed.vehicle_id, account: props.accountToken },
+            params: { vehicle_id: parsed.vehicle_id },
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -143,7 +134,7 @@ export function registerVehicleTools(
           {
             kv: env.CACHE,
             toolName: "get_vehicle_status",
-            params: { id: parsed.id, account: props.accountToken },
+            params: { id: parsed.id },
             forceRefresh: false,
           },
           () => fleetioRequest(creds, `/v1/vehicles/${parsed.id}`)

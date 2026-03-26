@@ -1,6 +1,7 @@
 # Fleetio MCP Server — Development Variables
 # Copy this file to .dev.vars and fill in your values.
 #
-# Generate a random string for cookie encryption:
-#   openssl rand -hex 32
-COOKIE_ENCRYPTION_KEY=your-random-encryption-key-here
+# Find your API key under User Settings in Fleetio.
+# Find your Account Token in your Fleetio account settings.
+FLEETIO_API_KEY=your-fleetio-api-key-here
+FLEETIO_ACCOUNT_TOKEN=your-fleetio-account-token-here

@@ -1,36 +1,47 @@
-import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpAgent } from "agents/mcp";
-import type { Env, FleetioProps } from "./types";
-import { FleetioHandler } from "./auth/handler";
+import type { Env } from "./types";
 import { registerVehicleTools } from "./tools/vehicles";
 import { registerMaintenanceTools } from "./tools/maintenance";
 
-export class FleetioMCP extends McpAgent<Env, Record<string, never>, FleetioProps> {
+export class FleetioMCP extends McpAgent<Env, {}, {}> {
   server = new McpServer({
     name: "fleetio-mcp",
     version: "1.0.0",
   });
 
   async init() {
-    registerVehicleTools(this.server, this.env, this.props!);
-    registerMaintenanceTools(this.server, this.env, this.props!);
+    registerVehicleTools(this.server, this.env);
+    registerMaintenanceTools(this.server, this.env);
   }
 }
 
-export default new OAuthProvider({
-  apiHandler: FleetioMCP.serve("/mcp"),
-  apiRoute: "/mcp",
-  authorizeEndpoint: "/authorize",
-  clientRegistrationEndpoint: "/register",
-  defaultHandler: FleetioHandler as any,
-  tokenEndpoint: "/token",
-  scopesSupported: ["mcp:access"],
-  // RFC 9728 — tells MCP clients where to find our authorization server
-  resourceMetadata: {
-    resource: "https://fleetio-mcp.<your-subdomain>.workers.dev/mcp",
-    resource_name: "Fleetio MCP Server",
-    scopes_supported: ["mcp:access"],
-    bearer_methods_supported: ["header"],
+export default {
+  fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/health") {
+      return new Response(JSON.stringify({ status: "ok" }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (url.pathname.startsWith("/mcp")) {
+      return FleetioMCP.serve("/mcp", { binding: "MCP_OBJECT" }).fetch(
+        request,
+        env,
+        ctx
+      );
+    }
+
+    if (url.pathname.startsWith("/sse")) {
+      return FleetioMCP.serveSSE("/sse", { binding: "MCP_OBJECT" }).fetch(
+        request,
+        env,
+        ctx
+      );
+    }
+
+    return new Response("Not found", { status: 404 });
   },
-});
+};

@@ -1,6 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { Env, FleetioProps } from "../types";
-import type { FleetioCredentials } from "../services/fleetio-api";
+import type { Env } from "../types";
 import { fleetioList, fleetioRequest } from "../services/fleetio-api";
 import { cachedFetchAndTransform } from "../services/cache";
 import { MAX_RESPONSE_CHARS } from "../constants";
@@ -32,8 +31,6 @@ function buildFilters(input: Record<string, unknown>): Record<string, Record<str
       } else if (field.endsWith("_lte")) {
         const realField = field.replace(/_lte$/, "");
         filters[realField] = { ...filters[realField], lte: String(val) };
-      } else if (typeof val === "boolean") {
-        filters[field] = { eq: String(val) };
       } else {
         filters[field] = { eq: String(val) };
       }
@@ -42,14 +39,10 @@ function buildFilters(input: Record<string, unknown>): Record<string, Record<str
   return Object.keys(filters).length > 0 ? filters : undefined;
 }
 
-export function registerMaintenanceTools(
-  server: McpServer,
-  env: Env,
-  props: FleetioProps
-) {
-  const creds: FleetioCredentials = {
-    apiKey: props.apiKey,
-    accountToken: props.accountToken,
+export function registerMaintenanceTools(server: McpServer, env: Env) {
+  const creds = {
+    apiKey: env.FLEETIO_API_KEY,
+    accountToken: env.FLEETIO_ACCOUNT_TOKEN,
   };
 
   server.tool(
@@ -63,7 +56,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "list_service_reminders",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -94,7 +87,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "list_service_entries",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -125,7 +118,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "list_work_orders",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -156,7 +149,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "get_work_order",
-            params: { id: parsed.id, account: props.accountToken },
+            params: { id: parsed.id },
             forceRefresh: false,
           },
           () => fleetioRequest(creds, `/v1/work_orders/${parsed.id}`)
@@ -181,7 +174,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "list_fuel_entries",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
@@ -212,7 +205,7 @@ export function registerMaintenanceTools(
           {
             kv: env.CACHE,
             toolName: "list_issues",
-            params: { ...parsed, account: props.accountToken },
+            params: parsed,
             forceRefresh: parsed.forceRefresh,
           },
           () =>
