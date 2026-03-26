@@ -44,7 +44,7 @@ export function registerVehicleTools(server: McpServer, env: Env) {
         const parsed = listVehiclesSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_vehicles",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
@@ -78,7 +78,7 @@ export function registerVehicleTools(server: McpServer, env: Env) {
         const parsed = getVehicleSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "get_vehicle",
             params: { id: parsed.id },
             forceRefresh: false,
@@ -103,7 +103,7 @@ export function registerVehicleTools(server: McpServer, env: Env) {
         const parsed = listVehicleMeterEntriesSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_vehicle_meter_entries",
             params: { vehicle_id: parsed.vehicle_id },
             forceRefresh: parsed.forceRefresh,
@@ -132,7 +132,7 @@ export function registerVehicleTools(server: McpServer, env: Env) {
         const parsed = getVehicleStatusSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "get_vehicle_status",
             params: { id: parsed.id },
             forceRefresh: false,

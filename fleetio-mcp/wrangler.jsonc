@@ -13,7 +13,7 @@
 
   "kv_namespaces": [
     {
-      "binding": "CACHE",
+      "binding": "FLEET_CACHE",
       "id": "<your-cache-kv-namespace-id>"
     }
   ],

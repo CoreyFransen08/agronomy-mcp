@@ -54,7 +54,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = listServiceRemindersSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_service_reminders",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
@@ -85,7 +85,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = listServiceEntriesSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_service_entries",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
@@ -116,7 +116,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = listWorkOrdersSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_work_orders",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
@@ -147,7 +147,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = getWorkOrderSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "get_work_order",
             params: { id: parsed.id },
             forceRefresh: false,
@@ -172,7 +172,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = listFuelEntriesSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_fuel_entries",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
@@ -203,7 +203,7 @@ export function registerMaintenanceTools(server: McpServer, env: Env) {
         const parsed = listIssuesSchema.parse(input);
         const data = await cachedFetchAndTransform(
           {
-            kv: env.CACHE,
+            kv: env.FLEET_CACHE,
             toolName: "list_issues",
             params: parsed,
             forceRefresh: parsed.forceRefresh,
