@@ -54,6 +54,16 @@ Once authenticated, follow the [Setup](#setup) section below to install, configu
 
 GDU tools default to standard corn parameters (base 50F, upper 86F) but accept custom values for other crops.
 
+### Web Crawl
+
+| Tool | Description |
+|------|-------------|
+| `start_crawl` | Start an async website crawl via Cloudflare Browser Rendering. Returns a job ID. |
+| `get_crawl_results` | Retrieve status and content from a crawl job. Supports pagination and status filtering. |
+| `delete_crawl` | Cancel a running crawl job. |
+
+Crawl tools use the [Cloudflare Browser Rendering crawl endpoint](https://developers.cloudflare.com/browser-rendering/rest-api/crawl-endpoint/). Requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` secrets (see [Setup](#setup)).
+
 ### GDU Formula
 
 ```
@@ -83,6 +93,7 @@ The FIPS dataset includes ~3,220 US counties.
   - Archive endpoint for historical data
   - Forecast endpoint for current + future data
   - Automatic date-range splitting when a request spans past and future
+- **Web Crawl**: [Cloudflare Browser Rendering API](https://developers.cloudflare.com/browser-rendering/) (requires Cloudflare API token)
 - **County centroids**: US Census Bureau county geometries via PostGIS `ST_Centroid`
 
 ## Architecture
@@ -102,6 +113,22 @@ Create a KV namespace and update the ID in `wrangler.jsonc`:
 
 ```bash
 npx wrangler kv namespace create CACHE
+```
+
+Set Cloudflare credentials for the crawl tools:
+
+```bash
+npx wrangler secret put CLOUDFLARE_ACCOUNT_ID
+npx wrangler secret put CLOUDFLARE_API_TOKEN
+```
+
+The API token needs **Browser Rendering - Edit** permission. Create one at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens). Your Account ID is on the dashboard overview page.
+
+For local dev, add these to a `.dev.vars` file:
+
+```
+CLOUDFLARE_ACCOUNT_ID=your_account_id
+CLOUDFLARE_API_TOKEN=your_api_token
 ```
 
 ## Development
